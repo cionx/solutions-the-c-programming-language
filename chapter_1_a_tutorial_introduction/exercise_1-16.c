@@ -1,7 +1,7 @@
 
 #include <stdio.h>
 
-#define MAXLINE 1000 /* maximum input line size */
+#define MAXLINE 100000 /* maximum input line size */
 
 int getaline(char line[], int maxline);
 int morelength(void);
