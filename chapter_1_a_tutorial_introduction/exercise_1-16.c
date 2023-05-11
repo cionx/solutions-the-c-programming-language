@@ -26,6 +26,7 @@ int main(void)
 	}
 	if (max > 0) /* there was a line */
 		printf("Longest line: %d characters\n%s\n", max, longest);
+
 	return 0;
 }
 

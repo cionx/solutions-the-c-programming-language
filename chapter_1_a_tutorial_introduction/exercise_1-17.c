@@ -13,6 +13,7 @@ int main(void)
 	while ((len = getaline(line, MAXLINE)) > 0)
 		if (len > 80)
 			printf("%s", line);
+
 	return 0;
 }
 

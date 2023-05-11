@@ -15,6 +15,7 @@ int main(void)
 		trim(line, len);
 		printf("%s", line);
 	}
+
 	return 0;
 }
 

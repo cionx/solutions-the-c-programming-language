@@ -21,7 +21,8 @@ int main(void)
 		replace_tabs(line, MAXLEN);
 		printf("%s", line);
 	}
-	
+
+	return 0;
 }
 
 void set_tabsize(int size)
@@ -82,4 +83,3 @@ int getaline(char s[], int lim)
 	s[i] = '\0';
 	return i;
 }
-
