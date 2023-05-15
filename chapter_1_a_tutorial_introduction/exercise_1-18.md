@@ -2,6 +2,8 @@
 
 > Write a program to remove trailing blanks and tabs from each line of input, and to delete entirely blank lines.
 
+
+
 We use an auxiliary function `trim` that removes all trailing whitespace from a string.
 This function starts at the end of the string `s[]` and replaces every kind of white space by `\0`.
 It stops when it encounters a non-whitespace character or when it has gone through the entire string.

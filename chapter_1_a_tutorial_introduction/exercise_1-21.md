@@ -4,6 +4,8 @@
 > Use the same tab stops as for `detab`.
 > When either a tab or a single blank would suffice to reach a tab stop, which should be given preference?
 
+
+
 We have the following cases to consider.
 
 1. The tabwidth is at least 2.

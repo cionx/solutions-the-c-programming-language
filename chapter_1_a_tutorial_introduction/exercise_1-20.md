@@ -4,6 +4,8 @@
 > Assume a fixed set of tab stops, say every _n_ columns.
 > Should _n_ be a variable or a symbolic parameter.
 
+
+
 We choose to make `n` a variable, so that it can be changed by the user of the program (once we’ve learned how to pass arguments to a program).
 
 ```c
