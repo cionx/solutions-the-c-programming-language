@@ -1,9 +1,9 @@
 #include <stdio.h>
 
-#define OUTSIDE     0
-#define INSIDE      1
+#define OUTSIDE 0
+#define INSIDE  1
 
-#define MAX_LEN     100
+#define MAX_LEN 100
 
 int main(void)
 {
@@ -14,31 +14,32 @@ int main(void)
 	int c;
 	int state;
 
-	int width; // needed later for printing
-
-	for (int i = 0; i <= MAX_LEN; ++i)
-		count[i] = 0;
+	for (int len = 0; len <= MAX_LEN; ++len)
+		count[len] = 0;
 
 	longest = cur_len = 0;
 
 	/*** Counting of words ***/
-	
-	c = 0;
+
+	c = 0; /* Dummy initial value. */
 	state = OUTSIDE;
 
-	while((c = getchar()) != EOF) {
+	while ((c = getchar()) != EOF) {
 		if (c == ' ' || c == '\t' || c == '\n') {
+			/* Check if we’re exiting a word. */
 			if (state == INSIDE) {
 				if (cur_len > MAX_LEN) {
-					printf("Warning: cannot handle words longer than %d: lenght %d", MAX_LEN, cur_len);
+					printf("Warning: cannot handle words longer than %d. "
+					       "Encountered length %d.",
+					       MAX_LEN, cur_len);
 				}
 				else {
 					++count[cur_len];
 					if (cur_len > longest)
 						longest = cur_len;
-					cur_len = 0;
-					state = OUTSIDE;
 				}
+				cur_len = 0;
+				state = OUTSIDE;
 			}
 		}
 		else {
@@ -48,13 +49,16 @@ int main(void)
 	}
 
 	/*** Printing ***/
-	
-	width = 0;
+
+	/* We determine the number of digits of the longest occuring length.
+	 * In the horizontial histogram, this is the width of the legend.
+	 * In the vertical histogram, it is the width of the columns. */
+	int width = 0;
 	for (int tmp = longest; tmp > 0; tmp = tmp / 10)
 		++width;
 
-	/* Horizontal histogram */
-	
+	/** Horizontal histogram **/
+
 	printf("\nHorizontal Histogram\n--------------------\n");
 	for (int len = 1; len <= longest; ++len) {
 		printf("%*d   ", width, len);
@@ -63,22 +67,29 @@ int main(void)
 		putchar('\n');
 	}
 
-	/* Vertical histogram */
+	printf("\n\n");
+
+	/** Vertical histogram **/
+
+	int highest = 0;
+	for (int len = 0; len <= longest; ++len)
+		if (count[len] > highest)
+			highest = count[len];
 
 	printf("\nVertical Histogram\n------------------\n");
-	for (int height = longest; height > 0; --height) {
-		for (int i = 1; i <= longest; ++i) {
+	for (int height = highest; height > 0; --height) {
+		for (int len = 1; len <= longest; ++len) {
 			char symbol;
-			if (count[i] >= height)
+			if (count[len] >= height)
 				symbol = '*';
 			else
 				symbol = ' ';
 			printf("%*c", width, symbol);
-			putchar(' '); // space between columns
+			putchar(' '); /* Space between columns. */
 		}
 		putchar('\n');
 	}
-	putchar('\n'); // space between columns and legend
+	putchar('\n'); /* Space between columns and legend. */
 	for (int len = 1; len <= longest; ++len)
 		printf("%*d ", width, len);
 	putchar('\n');

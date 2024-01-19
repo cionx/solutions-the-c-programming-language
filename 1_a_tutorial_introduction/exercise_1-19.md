@@ -3,28 +3,30 @@
 > Write a function `reverse(s)` that reverses the character string `s`.
 > Use it to write a program that reverses its input a line at a time.
 
-
+---
 
 The function `reverse` first determined the length of its input.
-It then swaps the first entry with the last one, then the second one with the second-to-last one, and so on.
+It then swaps the first character with the last one, then the second one with the second-to-last one, and so on.
 ```c
 void reverse(char s[])
 {
-	int length;
+	int last_index;
 
-	length = 0;
-	while (s[length] != '\0')
-		++length;
+	last_index = 0;
+	while (s[last_index] != '\0')
+		++last_index;
+	--last_index;
 
-	for (int i = 0; i < length - 1 - i; ++i) {
-		char c;
-		c = s[i];
-		s[i] = s[length - 1 - i];
-		s[length - 1 - i] = c;
+	for (int i = 0; i < last_index - i; ++i) {
+		char tmp;
+		tmp = s[i];
+		s[i] = s[last_index - i];
+		s[last_index - i] = tmp;
+		
 	}
 }
 ```
-The reverse lines, we use an auxiliary procedure `reverse_line` that takes care of the linebreak at the end of a line.
+The reverse lines, we use an auxiliary procedure `reverse_line` that takes care of the line break at the end of a line.
 ```c
 void reverse_line(char line[], int length)
 {
@@ -37,7 +39,7 @@ void reverse_line(char line[], int length)
 		reverse(line);
 }
 ```
-Finally, a the main function:
+Finally, the main function:
 ```c
 int main(void)
 {
@@ -57,11 +59,11 @@ Altogether, we get the following code:
 ```c
 #include <stdio.h>
 
-#define MAXLINE 1000
+#define MAXLINE 100000
 
 void reverse(char s[]);
 void reverse_line(char line[], int length);
-int getaline (char s[], int lim);
+int getaline(char s[], int lim);
 
 int main(void)
 {
@@ -89,29 +91,30 @@ void reverse_line(char line[], int length)
 
 void reverse(char s[])
 {
-	int length;
+	int last_index;
 
-	length = 0;
-	while (s[length] != '\0')
-		++length;
+	last_index = 0;
+	while (s[last_index] != '\0')
+		++last_index;
+	--last_index;
 
-	for (int i = 0; i < length - 1 - i; ++i) {
-		char c;
-		c = s[i];
-		s[i] = s[length - 1 - i];
-		s[length - 1 - i] = c;
+	for (int i = 0; i < last_index - i; ++i) {
+		char tmp;
+		tmp = s[i];
+		s[i] = s[last_index - i];
+		s[last_index - i] = tmp;
 	}
 }
 
 int getaline(char s[], int lim)
 {
 	int c, i;
-	
+
 	c = 0;
 	for (i = 0; i < lim - 1 && (c = getchar()) != EOF && c != '\n'; ++i)
-		s[i] = c;
+		s[i] = (char) c;
 	if (c == '\n') {
-		s[i] = c;
+		s[i] = (char) c;
 		++i;
 	}
 	s[i] = '\0';
@@ -121,14 +124,13 @@ int getaline(char s[], int lim)
 
 We can test this program with its own source code:
 ```text
-$ cat exercise_1-19.c | ./a.out
 >h.oidts< edulcni#
 
-0001 ENILXAM enifed#
+000001 ENILXAM enifed#
 
 ;)][s rahc(esrever diov
 ;)htgnel tni ,][enil rahc(enil_esrever diov
-;)mil tni ,][s rahc( enilateg tni
+;)mil tni ,][s rahc(enilateg tni
 
 )diov(niam tni
 {
@@ -139,6 +141,8 @@ $ cat exercise_1-19.c | ./a.out
 ;)nel ,enil(enil_esrever		
 ;)enil ,"s%"(ftnirp		
 }	
+
+;0 nruter	
 }
 
 )htgnel tni ,][enil rahc(enil_esrever diov
@@ -154,33 +158,34 @@ esle
 
 )][s rahc(esrever diov
 {
-;htgnel tni	
+;xedni_tsal tni	
 
-;0 = htgnel	
-)'0\' =! ]htgnel[s( elihw	
-;htgnel++		
+;0 = xedni_tsal	
+)'0\' =! ]xedni_tsal[s( elihw	
+;xedni_tsal++		
+;xedni_tsal--	
 
-{ )i++ ;i - 1 - htgnel < i ;0 = i tni( rof	
-;c rahc		
-;]i[s = c		
-;]i - 1 - htgnel[s = ]i[s		
-;c = ]i - 1 - htgnel[s		
+{ )i++ ;i - xedni_tsal < i ;0 = i tni( rof	
+;pmt rahc		
+;]i[s = pmt		
+;]i - xedni_tsal[s = ]i[s		
+;pmt = ]i - xedni_tsal[s		
 }	
 }
 
 )mil tni ,][s rahc(enilateg tni
 {
 ;i ,c tni	
-	
+
 ;0 = c	
 )i++ ;'n\' =! c && FOE =! ))(rahcteg = c( && 1 - mil < i ;0 = i( rof	
-;c = ]i[s		
+;c )rahc( = ]i[s		
 { )'n\' == c( fi	
-;c = ]i[s		
+;c )rahc( = ]i[s		
 ;i++		
 }	
 ;'0\' = ]i[s	
 ;i nruter	
 }
 ```
-(This output has tabs at the _end_ of lines – truly aweful.)
+(This output has tabs at the _end_ of lines – truly awful.)

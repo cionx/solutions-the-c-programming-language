@@ -2,7 +2,7 @@
 
 > Write a program to print the corresponding Celsius to Fahrenheit table.
 
-
+---
 
 We can rearrange the equation
 $$

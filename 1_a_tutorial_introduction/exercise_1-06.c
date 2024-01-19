@@ -1,9 +1,10 @@
 #include <stdio.h>
-#include <stdbool.h>
 
 int main(void)
 {
-	while (true) {
-		printf("%d\n", getchar() != EOF);
+	int c = 'a'; /* An initial value that is not EOF. */
+	while (c != EOF) {
+		c = getchar();
+		printf("The character %d gives %d\n", c, c != EOF);
 	}
 }

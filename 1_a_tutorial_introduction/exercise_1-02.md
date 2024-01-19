@@ -2,7 +2,7 @@
 
 > Experiment to find out what happens when `printf`’s argument contains `\c` where `c` is some constant not listed above.
 
-
+---
 
 We use the following code:
 ```c

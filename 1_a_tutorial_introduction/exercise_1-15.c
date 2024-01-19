@@ -11,7 +11,7 @@ float celsius(float fahr);
 
 int main(void)
 {
-	for(int fahr = LOWER; fahr <= UPPER; fahr = fahr + STEP)
+	for (int fahr = LOWER; fahr <= UPPER; fahr = fahr + STEP)
 		printf("%3d %6.1f\n", fahr, celsius(fahr));
 }
 

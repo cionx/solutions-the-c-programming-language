@@ -1,15 +1,15 @@
 #include <stdio.h>
 
-#define MAXLINE 100000 /* maximum input line size */
+#define MAXLINE 1000 /* Maximum input line size. */
 
 int getaline(char line[], int maxline);
 void trim(char s[], int length);
 
-/* removes all trailing whitespace, as well as blank lines */
+/* Removes all trailing whitespace, as well as blank lines. */
 int main(void)
 {
-	int len;                /* current line length */
-	char line[MAXLINE];     /* current input line */
+	int len;            /* Current line length. */
+	char line[MAXLINE]; /* Current input line. */
 
 	while ((len = getaline(line, MAXLINE)) > 0) {
 		trim(line, len);
@@ -19,31 +19,31 @@ int main(void)
 	return 0;
 }
 
-/* getaline: read a line into s, return length */
+/* getaline: read a line into s, return length. */
 int getaline(char s[], int lim)
 {
 	int c, i;
-	
+
 	c = 0;
 	for (i = 0; i < lim - 1 && (c = getchar()) != EOF && c != '\n'; ++i)
-		s[i] = c;
+		s[i] = (char) c;
 	if (c == '\n') {
-		s[i] = c;
+		s[i] = (char) c;
 		++i;
 	}
 	s[i] = '\0';
 	return i;
 }
 
-/* trim: remove trailing whitespace from a string */
+/* trim: remove trailing whitespace from a string. */
 void trim(char s[], int length)
 {
 	int i;
 	int c;
 
-	c = s[length - 1]; // remember the last character for later
+	c = s[length - 1]; // Remember the last character for later.
 
-	i = length - 1; //
+	i = length - 1;
 	while (i >= 0 && (s[i] == ' ' || s[i] == '\t' || s[i] == '\n')) {
 		s[i] = '\0';
 		--i;

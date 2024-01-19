@@ -2,27 +2,29 @@
 
 > Write a program to count blanks, tabs, and newlines.
 
+---
 
-
-We simply extend the code from subsection 1.5.3:
+We simply extend the code from subsection 1.5.3 to handle three counters at once:
 ```c
 #include <stdio.h>
 
 int main(void)
 {
-	int count, c;
+	int c;
+	long count_blank, count_tab, count_newline;
 
-	count = 0;
+	count_blank = count_tab = count_newline = 0;
 	while ((c = getchar()) != EOF) {
 		if (c == ' ')
-			++count;
+			++count_blank;
 		if (c == '\t')
-			++count;
+			++count_tab;
 		if (c == '\n')
-			++count;
+			++count_newline;
 	}
 
-	printf("%d\n", count);
+	printf("Blanks: %ld\n", count_blank);
+	printf("Tabs:   %ld\n", count_tab);
+	printf("Lines:  %ld\n", count_newline);
 }
 ```
-It would be better to use only one `if` with the condition `c == ' ' || c == '\t' || c == '\n'`, but we haven’t met the logical conjunction operator `||` yet.

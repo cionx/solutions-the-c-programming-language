@@ -2,7 +2,7 @@
 
 > Modify the temperature conversion program to print a heading above the table.
 
-
+---
 
 We add the following two lives above the `while` loop:
 ```c

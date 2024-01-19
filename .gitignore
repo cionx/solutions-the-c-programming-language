@@ -1,3 +1,4 @@
 .ccls-cache
 **callgrind.out.*
+**.directory
 **.out

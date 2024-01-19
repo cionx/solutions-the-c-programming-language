@@ -1,23 +1,23 @@
 #include <stdio.h>
 
-#define START   33
-#define END     126
+/* 33 is exclamation mark, 126 is tilde */
+#define START 33
+#define END   126
 
 int main(void)
 {
 	int c;
-	int count[END - START + 1];
+	int count[END + 1];
 	int total;
 
-	for (int i = 0; i < END - START + 1; ++i)
+	for (int i = 0; i <= END; ++i)
 		count[i] = 0;
 	total = 0;
 
 	c = 0;
 	while ((c = getchar()) != EOF) {
-		// 32 is blank, 126 is ~
 		if (START <= c && c <= END) {
-			++count[c - START];
+			++count[c];
 			++total;
 		}
 	}
@@ -26,14 +26,17 @@ int main(void)
 		printf("Error: no characters found");
 	}
 	else {
-		printf("ASCII  CHAR  FREQ\n");
-		printf("-----  ----  ----\n");
-		for (int i = 0; i < END - START + 1; ++i) {
+		printf("ASCII  CHAR  FREQ %%\n");
+		printf("-----  ----  ------\n");
+		for (int i = START; i <= END; ++i) {
 			if (count[i] != 0) {
-				float freq_perc;
-				freq_perc = (100.0 * count[i]) / total;
-				printf("  %3d     %c  %4.1f  ", i + START, i + START, freq_perc);
-				for (int n = 0; n <= freq_perc; ++n)
+				float freq_percent;
+				freq_percent = 100.0 * count[i] / total;
+				printf("  %3d     %c   %5.2f   ", i, i, freq_percent);
+				/* We print as many stars as the frequency in percent rounded to
+				 * the nearest integer. So, below 0.5 no star, from 0.5 to 1.5
+				 * one star, from 1.5 to 2.5 two stars, and so on. */
+				for (float p = 0.5; p <= freq_percent; ++p)
 					putchar('*');
 				putchar('\n');
 			}

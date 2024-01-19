@@ -1,83 +1,77 @@
 #include <stdio.h>
 
-#define MAXLEN      100000
-#define LENERROR    -1
+#define MAXLINE  1000
+#define LENERROR -1
+#define TABSIZE  4
 
-int tabsize;
-
-void set_tabsize(int size);
-int replace_tabs(char s[], int max_len);
+int detab(char s[], int tabsize);
 int getaline(char line[], int lim);
-
-/* Main code */
 
 int main(void)
 {
-	char line[MAXLEN];
+	char line[MAXLINE];
+	int code = 0;
 
-	set_tabsize(4);
-
-	while (getaline(line, MAXLEN) > 0) {
-		replace_tabs(line, MAXLEN);
+	while (getaline(line, MAXLINE) > 0) {
+		if ((code = detab(line, TABSIZE)) < 0)
+			return code;
 		printf("%s", line);
 	}
 
 	return 0;
 }
 
-void set_tabsize(int size)
+int detab(char line[], int tabsize)
 {
-	extern int tabsize;
-	tabsize = size;
-}
-
-int replace_tabs(char s[], int max_len)
-{
-	int t[max_len];
-	int j;
-	int spaces;
+	char result[MAXLINE];
+	int j;      /* Position in `result` to write to. */
+	int spaces; /* How many spaces a tab at the current position is worth. */
 
 	j = 0;
 	spaces = tabsize;
-	for (int i = 0; i < max_len && s[i] != '\0' && j < max_len; ++i) {
-		if (s[i] == '\t') {
-			for(; spaces > 0; --spaces) {
-				t[j] = ' ';
-				++j;
-			}
-			spaces = tabsize;
+	for (int i = 0; i < MAXLINE && line[i] != '\0' && j < MAXLINE; ++i) {
+		/* Either expand a tab character... */
+		if (line[i] == '\t') {
+			for (; spaces > 0 && j < MAXLINE; --spaces, ++j)
+				result[j] = ' ';
 		}
+		/* ... or just copy the current character. */
 		else {
-			t[j] = s[i];
+			result[j] = line[i];
 			--spaces;
-			if (spaces == 0)
-				spaces = tabsize;
 			++j;
 		}
+		if (spaces == 0)
+			spaces = tabsize;
 	}
 
-	if (j >= max_len) {
-		printf("Error: Not enough space to expand with tabwidth %d:\n%s", tabsize, s);
+	/* Check if the result fits into MAXLINE. More explicitly, check if there is
+	 * enough space left to add \0. */
+	if (j >= MAXLINE) {
+		printf("Error: Not enough space to expand with tabwidth %d:\n\"%s\"",
+		       tabsize, line);
 		return LENERROR;
 	}
-	t[j] = '\0';
+	result[j] = '\0';
 
+	/* Finally, copy the result back into `line`, including the trailing \0. */
 	for (int i = 0; i <= j; ++i) {
-		s[i] = t[i];
+		line[i] = result[i];
 	}
 
+	/* Return the length of the detabed line. */
 	return j;
 }
 
 int getaline(char s[], int lim)
 {
 	int c, i;
-	
+
 	c = 0;
 	for (i = 0; i < lim - 1 && (c = getchar()) != EOF && c != '\n'; ++i)
-		s[i] = c;
+		s[i] = (char) c;
 	if (c == '\n') {
-		s[i] = c;
+		s[i] = (char) c;
 		++i;
 	}
 	s[i] = '\0';

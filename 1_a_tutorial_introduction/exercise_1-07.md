@@ -2,13 +2,13 @@
 
 > Write a program to print the value of `EOF`.
 
-
+---
 
 The book states the following:
 
 > `EOF` is an integer defined in `<stdio.h>` […].
 
-As `EOF` is an integer, we can print its value with `printf`:
+As `EOF` is an integer, we can print its value using `printf`:
 ```c
 #include <stdio.h>
 

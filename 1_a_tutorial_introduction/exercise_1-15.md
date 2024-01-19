@@ -2,9 +2,9 @@
 
 > Rewrite the temperature conversion program of Section 1.2 to use a function for conversion.
 
+---
 
-
-We get the following code:
+We can use the following code:
 ```c
 #include <stdio.h>
 
@@ -19,7 +19,7 @@ float celsius(float fahr);
 
 int main(void)
 {
-	for(int fahr = LOWER; fahr <= UPPER; fahr = fahr + STEP)
+	for (int fahr = LOWER; fahr <= UPPER; fahr = fahr + STEP)
 		printf("%3d %6.1f\n", fahr, celsius(fahr));
 }
 

@@ -4,19 +4,15 @@ int main(void)
 {
 	int c;
 
-	c = 0;
+	c = 0; /* Dummy initial value. */
 	while ((c = getchar()) != EOF) {
 		if (c == '\t')
 			printf("\\t");
-		if (c != '\t') {
-			if (c == '\b')
-				printf("\\b");
-			if (c != '\b') {
-				if (c == '\\')
-					printf("\\\\");
-				if (c != '\\')
-					putchar(c);
-			}
-		}
+		else if (c == '\b')
+			printf("\\b");
+		else if (c == '\\')
+			printf("\\\\");
+		else
+			putchar(c);
 	}
 }

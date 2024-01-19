@@ -2,29 +2,31 @@
 
 > Verify that the expression `getchar() != EOF` is 0 or 1.
 
+---
 
-
-We tried to use the following code:
+We use the following code:
 ```c
 #include <stdio.h>
-#include <stdbool.h>
 
 int main(void)
 {
-	while (true) {
-		printf("%d\n", getchar() != EOF);
+	int c = 'a'; /* An initial value that is not EOF. */
+	while (c != EOF) {
+		c = getchar();
+		printf("The character %d gives %d\n", c, c != EOF);
 	}
 }
 ```
-We get the following behaviour:
+The compiled program has the following behaviour:
 
 - With Ctrl+C, the program exits.
 
-- With Ctrl+D, the program prints `0` in an infinite loop.
-  We suspect that `getchar` keeps returning `EOF` over and over again.
+- With Ctrl+D, the program prints `0` and then exits.
 
-- With every other character that we tested, the program prints `1`.
-
-We used `stdbool.h` to be able to use `true`.
+- With every ASCII character that we tested, the program prints two `1`s.
+  This makes sense:
+  after inputing the character itself, we also press the enter key.
+  This will give `getchar()` two characters:
+  the character itself, and the newline character `\n` coming from pressing the enter key.
 
 Our program seems to support the claim that `getchar() != EOF` is always 0 or 1.

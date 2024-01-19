@@ -2,17 +2,20 @@
 
 int main(void)
 {
-	int count, c;
+	int c;
+	long count_blank, count_tab, count_newline;
 
-	count = 0;
+	count_blank = count_tab = count_newline = 0;
 	while ((c = getchar()) != EOF) {
 		if (c == ' ')
-			++count;
+			++count_blank;
 		if (c == '\t')
-			++count;
+			++count_tab;
 		if (c == '\n')
-			++count;
+			++count_newline;
 	}
 
-	printf("%d\n", count);
+	printf("Blanks: %ld\n", count_blank);
+	printf("Tabs:   %ld\n", count_tab);
+	printf("Lines:  %ld\n", count_newline);
 }

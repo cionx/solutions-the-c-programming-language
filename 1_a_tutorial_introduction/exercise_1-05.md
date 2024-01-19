@@ -2,11 +2,12 @@
 
 > Modify the temperature conversion program to print the table in reverse order, that is, from 300 degrees to 0.
 
+---
 
-
-We just have to modify the for loop:
+We just have to modify the `for` loop to the following:
 ```c
 for (fahr = 300; fahr >= 0; fahr = fahr - 20)
+	…
 ```
 This leads to the following overall code:
 ```c
@@ -21,7 +22,7 @@ int main(void)
 		printf("%3d %6.1f\n", fahr, (5.0 / 9.0) * (fahr - 32));
 }
 ```
-The output is as follows:
+The output of the resulting executable is as follows:
 ```text
 300  148.9
 280  137.8
