@@ -1,77 +1,65 @@
 #include <stdbool.h>
 #include <stdio.h>
 
-int htoi(char s[]);
-bool whitespace(char c);
-bool hexa_start(char string[], int position);
-int hexa_value(char c);
+bool ishexdigit(char c);
+int hexvalue(char c);
+int htoi(const char s[]);
 
-int htoi(char s[])
+bool ishexdigit(char c)
 {
-	/* We regard the occurrence of no digits as the empty sum. */
-	if (s[0] == '\0')
-		return 0;
-	int i = 0;
-
-	/* Ignore leading whitespace. */
-	while (whitespace(s[i]))
-		++i;
-
-	/* Support negative numbers. */
-	bool negative = false;
-	if ((negative = (s[i] == '-')))
-		++i;
-
-	/* Ignore whitespace between minus sign and 0x/0X. */
-	while (whitespace(s[i]))
-		++i;
-
-	if (hexa_start(s, i))
-		i += 2;
-
-	int sum = 0;
-	for (; s[i] != '\0'; i++) {
-		sum *= 16;
-		sum += hexa_value(s[i]);
-	}
-
-	if (negative)
-		return -sum;
-	else
-		return sum;
+	return ('0' <= c && c <= '9') || ('a' <= c && c <= 'f') ||
+	       ('A' <= c && c <= 'F');
 }
 
-/* Checks if a character is inline whitespace. */
-bool whitespace(char c)
-{
-	return c == ' ' || c == '\t';
-}
-
-/* Checks for 0x/0X at the given position. */
-bool hexa_start(char s[], int i)
-{
-	return (s[i] == '0') && (s[i + 1] == 'x' || s[i + 1] == 'X');
-}
-
-/* The character needs to be a valid hexadecimal digit.
- * Otherwise, -1 is returned.
- */
-int hexa_value(char c)
+int hexvalue(char c)
 {
 	if ('0' <= c && c <= '9')
 		return c - '0';
-	else if ('a' <= c && c <= 'f')
-		return 10 + c - 'a';
-	else if ('A' <= c && c <= 'F')
-		return 10 + c - 'A';
-
+	if ('a' <= c && c <= 'f')
+		return c - 'a' + 10;
+	if ('A' <= c && c <= 'F')
+		return c - 'A' + 10;
 	return -1;
+}
+
+int htoi(const char s[])
+{
+	int result = 0;
+	int sign = 1;
+
+	int i = 0;
+
+	/* Gobble up leading whitespace. */
+	while (s[i] == ' ')
+		++i;
+	/* Determine the sign. */
+	if (s[i] == '-') {
+		sign = -1;
+		++i;
+	}
+	/* Gobble up whitespace again. */
+	while (s[i] == ' ')
+		++i;
+	/* Ignore optional 0x or 0X. */
+	if (s[i] == '0' && (s[i + 1] == 'x' || s[i + 1] == 'X'))
+		i += 2;
+	/* Convert the remaining digits. */
+	for (; ishexdigit(s[i]); ++i) {
+		result *= 16;
+		result += hexvalue(s[i]);
+	}
+	/* Finally, return the result. */
+	return sign * result;
 }
 
 int main(void)
 {
-	char s[] = "    -0x1f";
-	printf("\"%s\" becomes %d\n", s, htoi(s));
-
+	const char *strings[24] = {"1f",     "1F",    "0x1f",    "0X1F",   " 1f",
+	                           " 1F",    " 0x1f", " 0X1F",   "-1f",    "-1F",
+	                           "-0x1f",  "-0X1F", " -1f",    " -1F",   " -0x1f",
+	                           " -0X1F", "- 1f",  "- 1F",    "- 0x1f", "- 0X1F",
+	                           " - 1f",  " - 1F", " - 0x1f", " - 0X1F"};
+	for (int i = 0; i < 24; ++i)
+		printf("\"%s\" \t %d\n", strings[i], htoi(strings[i]));
 	return 0;
 }

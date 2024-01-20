@@ -3,90 +3,95 @@
 > Write a function `htoi(s)`, which converts a string of hexadecimal digits (including an optional `0x` or `0X`) into its equivalent integer value.
 > The allowable digits are `0` through `9`, `a` through `f`, and `A` through `F`.
 
+---
 
-
-We decide to interpret the empty string as the empty sum, which has value `0`.
+We use auxiliary functions to determine whether a character is an allowed digit, and to compute its numerical value.
 ```c
-int htoi(char s[])
+bool ishexdigit(char c)
 {
-	/* We regard the occurrence of no digits as the empty sum. */
-	if (s[0] == '\0')
-		return 0;
-```
-Otherwise, we will need an index to go through the input string.
-```c
-	int i = 0;
-```
-We allow for leading whitespace.
-```c
-	/* Ignore leading whitespace. */
-	while (whitespace(s[i]))
-		++i;
-```
-We also support negative numbers.
-The minus sign must be placed before the optional `0x`/`0X`.
-```c
-	/* Support negative numbers. */
-	bool negative = false;
-	if ((negative = (s[i] == '-')))
-		++i;
-```
-We do, however, support whitespace between the minus sign and `0x`/`0X`.
-```c
-	/* Ignore whitespace between minus sign and 0x/0X. */
-	while (whitespace(s[i]))
-		++i;
-```
-We simply skip the leading `0x`/`0X` if present.
-```c
-	if (hexa_start(s, i))
-		i += 2;
-```
-Finally, the core computation.
-The auxiliary function `hexa_value` actually checks if its input is a valid hexademical digits (and returns `-1` if so).
-But we don’t seem to have a way to make `htoi` return an error (because we also allow negative values), so we ignore this check in our core computation.
-```c
-	int sum = 0;
-	for (; s[i] != '\0'; i++) {
-		sum *= 16;
-		sum += hexa_value(s[i]);
-	}
-```
-Before returning the final value we have to remember if the result is supposed to be negative.
-```c
-	if (negative)
-		return -sum;
-	else
-		return sum;
-}
-```
-
-The auxiliary functions are as follows:
-```c
-/* Checks if a character is inline whitespace. */
-bool whitespace(char c)
-{
-	return c == ' ' || c == '\t';
+	return ('0' <= c && c <= '9') || ('a' <= c && c <= 'f') ||
+	       ('A' <= c && c <= 'F');
 }
 
-/* Checks for 0x/0X at the given position. */
-bool hexa_start(char s[], int i)
-{
-	return (s[i] == '0') && (s[i + 1] == 'x' || s[i + 1] == 'X');
-}
-
-/* The character needs to be a valid hexadecimal digit.
- * Otherwise, -1 is returned.
- */
-int hexa_value(char c)
+int hexvalue(char c)
 {
 	if ('0' <= c && c <= '9')
 		return c - '0';
-	else if ('a' <= c && c <= 'f')
-		return 10 + c - 'a';
-	else if ('A' <= c && c <= 'F')
-		return 10 + c - 'A';
-
+	if ('a' <= c && c <= 'f')
+		return c - 'a' + 10;
+	if ('A' <= c && c <= 'F')
+		return c - 'A' + 10;
 	return -1;
 }
+```
+We can then write the function `htoi` as follows:
+```c
+int htoi(const char s[])
+{
+	int result = 0;
+	int sign = 1;
+
+	int i = 0;
+
+	/* Gobble up leading whitespace. */
+	while (s[i] == ' ')
+		++i;
+	/* Determine the sign. */
+	if (s[i] == '-') {
+		sign = -1;
+		++i;
+	}
+	/* Gobble up whitespace again. */
+	while (s[i] == ' ')
+		++i;
+	/* Ignore optional 0x or 0X. */
+	if (s[i] == '0' && (s[i + 1] == 'x' || s[i + 1] == 'X'))
+		i += 2;
+	/* Convert the remaining digits. */
+	for (; ishexdigit(s[i]); ++i) {
+		result *= 16;
+		result += hexvalue(s[i]);
+	}
+	/* Finally, return the result. */
+	return sign * result;
+}
+```
+
+We can test our function with the following code:
+```c
+const char *strings[24] = {"1f",     "1F",    "0x1f",    "0X1F",   " 1f",
+                           " 1F",    " 0x1f", " 0X1F",   "-1f",    "-1F",
+                           "-0x1f",  "-0X1F", " -1f",    " -1F",   " -0x1f",
+                           " -0X1F", "- 1f",  "- 1F",    "- 0x1f", "- 0X1F",
+                           " - 1f",  " - 1F", " - 0x1f", " - 0X1F"};
+for (int i = 0; i < 24; ++i)
+	printf("\"%s\" \t %d\n", strings[i], htoi(strings[i]));
+return 0;
+```
+The results are as desired:
+```text
+"1f" 	31
+"1F" 	31
+"0x1f" 	31
+"0X1F" 	31
+" 1f" 	31
+" 1F" 	31
+" 0x1f" 	31
+" 0X1F" 	31
+"-1f" 	-31
+"-1F" 	-31
+"-0x1f" 	-31
+"-0X1F" 	-31
+" -1f" 	-31
+" -1F" 	-31
+" -0x1f" 	-31
+" -0X1F" 	-31
+"- 1f" 	-31
+"- 1F" 	-31
+"- 0x1f" 	-31
+"- 0X1F" 	-31
+" - 1f" 	-31
+" - 1F" 	-31
+" - 0x1f" 	-31
+" - 0X1F" 	-31
 ```

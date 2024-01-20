@@ -183,14 +183,4 @@ int main(void) {
 	}
 	printf("unsigned long:\n%lu\n%lu\n", 0l, ulong_max);
 	printf("-----------\n");
-
-	/* FOR FLOATS */
-	float float_max = 1.0;
-	while (4 * float_max > 2 * float_max)
-		float_max *= 2;
-	float_max *= 2;
-	float float_eps = 1.0;
-	while ((float)(float_eps / 2) > 0)
-		float_eps /= 2;
-	printf("float:\n%g\n%f\n", float_eps, float_max);
 }

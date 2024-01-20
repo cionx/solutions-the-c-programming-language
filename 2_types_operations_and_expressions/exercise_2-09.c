@@ -1,9 +1,9 @@
 #include <stdio.h>
 
-int bitcount(unsigned x);
-int faster_bitcount(unsigned x);
+int bitcount(unsigned int x);
+int faster_bitcount(unsigned int x);
 
-int bitcount(unsigned x)
+int bitcount(unsigned int x)
 {
 	int b;
 
@@ -14,11 +14,13 @@ int bitcount(unsigned x)
 	return b;
 }
 
-int faster_bitcount(unsigned x)
+int faster_bitcount(unsigned int x)
 {
 	int b = 0;
-	for (int y = (int) x; y != 0; y &= (y - 1))
-		b++;
+	while (x != 0) {
+		x &= (x - 1);
+		++b;
+	}
 
 	return b;
 }

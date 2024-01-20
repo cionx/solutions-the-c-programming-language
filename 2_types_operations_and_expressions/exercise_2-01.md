@@ -4,7 +4,7 @@
 > Harder if you compute them:
 > determine the ranges of the various floating-point types.
 
-
+---
 
 ### From headers
 
@@ -29,7 +29,7 @@ printf("-------\n");
 printf("unsigned long:\n%d\n%llu\n", 0, ULLONG_MAX);
 printf("-------\n");
 ```
-(The minimal value of 0 for the unsigned types is also taken from the header file.
+(The minimal value of `0` for the unsigned types is also taken from the header file.
 It is not accessible as a macro or variable, but is instead mentioned in comments.)
 We get the following results:
 ```text
@@ -142,6 +142,11 @@ while (char_add > 0) {
 	char_add /= 2;
 }
 ```
+
+PS:
+Our code for unsigned types relies on overflow/underflow, which is undefined behaviour.
+Our code therefore may or may not work, depending on the compiler.
+At the time of writing it works with clang, but not with gcc.
 
 #### Floating-point types
 

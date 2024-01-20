@@ -4,7 +4,7 @@
 > Explain why.
 > Use this observation to write a faster version of `bitcount`.
 
-
+---
 
 The given statement is true if `x` is nonzero.
 (For zero, the given procedure results again in zero.)
@@ -20,15 +20,17 @@ The number `x & (x - 1)` looks therefore as follows:
 ```
 b₁ … bₙ 0 0 0 … 0 0
 ```
-We see that the right-most `1` has been deleted.
+We see that the right-most `1` has been deleted, while all other bits remain unchanged.
 
 We can now write the following version of `bitbcount`:
 ```c
-int faster_bitcount(unsigned x)
+int faster_bitcount(unsigned int x)
 {
 	int b = 0;
-	for (int y = (int) x; y != 0; y &= (y - 1))
-		b++;
+	while (x != 0) {
+		x &= (x - 1);
+		++b;
+	}
 
 	return b;
 }

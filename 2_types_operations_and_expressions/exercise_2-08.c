@@ -2,12 +2,13 @@
 
 unsigned int rightrot(unsigned int x, int n);
 
-unsigned int rightrot(unsigned int x, int n) {
+unsigned int rightrot(unsigned int x, int n)
+{
 	int width = 8 * sizeof(unsigned int);
 	// UINT_WIDTH from limits.h doesn't work for some reason.
 	n %= width;
 
-	unsigned int mask = ~(~0u << n); // n many 1's right-adjusted
+	unsigned int mask = ~(~0u << n); // n many 1s right-adjusted
 	unsigned int head = x & ~mask;
 	unsigned int tail = x & mask;
 	return (head >> n) | (tail << (width - n));

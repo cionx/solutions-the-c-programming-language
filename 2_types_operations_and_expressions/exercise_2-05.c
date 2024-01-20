@@ -1,19 +1,19 @@
 #include <stdbool.h>
 #include <stdio.h>
 
-int any(char str1[], char str2[]);
-bool in_string(char c, char str[]);
+int any(const char str1[], const char str2[]);
+bool instring(char c, const char str[]);
 
-int any(char str1[], char str2[])
+int any(const char str1[], const char str2[])
 {
 	for (int i = 0; str1[i] != '\0'; ++i)
-		if (in_string(str1[i], str2))
+		if (instring(str1[i], str2))
 			return i;
 
 	return -1;
 }
 
-bool in_string(char c, char str[])
+bool instring(char c, const char str[])
 {
 	for (int i = 0; str[i] != '\0'; ++i) {
 		if (c == str[i])

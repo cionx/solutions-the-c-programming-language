@@ -2,6 +2,8 @@
 
 > Write a loop equivalent to the `for` loop above without using `&&` or `||`.
 
+---
+
 We can always express a loop of the form
 ```c
 for(⟨init code⟩; bool11 && … && bool1n && !bool21 && … && !bool2m; ⟨increase code⟩) {

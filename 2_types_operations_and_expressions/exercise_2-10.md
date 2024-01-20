@@ -2,7 +2,7 @@
 
 > Rewrite the function `lower`, which converts upper case letters to lower case, with a conditional expression instead of `if`-`else`.
 
-
+---
 
 The original code for `lower` is given on page 43 as follows:
 ```c
@@ -14,7 +14,7 @@ int lower(int c)
 		return c;
 }
 ```
-We can simply replace the `if`-`else` by a conditional expression:
+We can simply replace the `if`-`else` construct by a conditional expression:
 ```c
 int lower(char c)
 {
