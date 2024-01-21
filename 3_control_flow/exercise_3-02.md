@@ -4,95 +4,76 @@
 > Use a `switch`.
 > Write a function for the other direction as well, converting escape sequences into the real characters.
 
+---
 
 Apart from the whitespace characters `\t` and `\n`, we will also escape backslashes; it is otherwise not possible to distinguish the single character `'\t'` from the two-character string `"\\t"` in the output.
-This then makes it impossible to retrieve the original text via `unescape`.
+This would then make it impossible to retrieve the original text via `unescape`.
 ```c
 void escape(char target[], const char source[])
 {
-	int j = 0;
-	for (int i = 0; source[i] != '\0'; ++i)
-		switch (source[i]) {
+	int to = 0;
+	for (int from = 0; source[from] != '\0'; ++from)
+		switch (source[from]) {
 			case '\t':
-				target[j++] = '\\';
-				target[j++] = 't';
+				target[to++] = '\\';
+				target[to++] = 't';
 				break;
 			case '\n':
-				target[j++] = '\\';
-				target[j++] = 'n';
+				target[to++] = '\\';
+				target[to++] = 'n';
 				break;
 			case '\\':
-				target[j++] = '\\';
-				target[j++] = '\\';
+				target[to++] = '\\';
+				target[to++] = '\\';
 				break;
 			default:
-				target[j++] = source[i];
+				target[to++] = source[from];
 				break;
 		}
-	target[j] = '\0';
+	target[to] = '\0';
 }
 ```
 The inverse function, `unescape`, is then as follows:
-```
+```c
 void unescape(char target[], const char source[])
 {
-	int j = 0;
-	for (int i = 0; source[i] != '\0'; ++i) {
-		if (source[i] == '\\') {
-			switch (source[i + 1]) {
+	int to = 0;
+	for (int from = 0; source[from] != '\0'; ++from) {
+		if (source[from] == '\\') {
+			switch (source[from + 1]) {
 				case 't':
-					target[j++] = '\t';
-					++i;
+					target[to++] = '\t';
+					++from;
 					break;
 				case 'n':
-					target[j++] = '\n';
-					++i;
+					target[to++] = '\n';
+					++from;
 					break;
 				case '\\':
-					target[j++] = '\\';
-					++i;
+					target[to++] = '\\';
+					++from;
 					break;
 				default:
-					target[j++] = '\\';
+					target[to++] = '\\';
 			}
 		}
 		else {
-			target[j++] = source[i];
+			target[to++] = source[from];
 		}
 	}
-	target[j] = '\0';
+	target[to] = '\0';
 }
 ```
 
-As an example, applying `escape` line-wise to its own source code results in the following string:
+As an example, applying `escape` to its own source code results in the following string:
 ```c
-void escape(char target[], const char source[])\n{\n\tint j = 0;\n\tfor (int i = 0; source[i] != '\\0'; ++i)\n\t\tswitch (source[i]) {\n\t\t\tcase '\\t':\n\t\t\t\ttarget[j++] = '\\\\';\n\t\t\t\ttarget[j++] = 't';\n\t\t\t\tbreak;\n\t\t\tcase '\\n':\n\t\t\t\ttarget[j++] = '\\\\';\n\t\t\t\ttarget[j++] = 'n';\n\t\t\t\tbreak;\n\t\t\tcase '\\\\':\n\t\t\t\ttarget[j++] = '\\\\';\n\t\t\t\ttarget[j++] = '\\\\';\n\t\t\t\tbreak;\n\t\t\tdefault:\n\t\t\t\ttarget[j++] = source[i];\n\t\t\t\tbreak;\n\t\t}\n\ttarget[j] = '\\0';\n}\n
+void escape(char target[], const char source[])\n{\n\tint to = 0;\n\tfor (int from = 0; source[from] != '\\0'; ++from)\n\t\tswitch (source[from]) {\n\t\t\tcase '\\t':\n\t\t\t\ttarget[to++] = '\\\\';\n\t\t\t\ttarget[to++] = 't';\n\t\t\t\tbreak;\n\t\t\tcase '\\n':\n\t\t\t\ttarget[to++] = '\\\\';\n\t\t\t\ttarget[to++] = 'n';\n\t\t\t\tbreak;\n\t\t\tcase '\\\\':\n\t\t\t\ttarget[to++] = '\\\\';\n\t\t\t\ttarget[to++] = '\\\\';\n\t\t\t\tbreak;\n\t\t\tdefault:\n\t\t\t\ttarget[to++] = source[from];\n\t\t\t\tbreak;\n\t\t}\n\ttarget[to] = '\\0';\n}\n
 ```
-Applying `unescape` to this string gives back the source code.
+Applying `unescape` to this string then gives back the original source code.
 
-If we hadn’t also escaped backslashes, then the output would look as follows instead:
-```text
-void escape(char target[], const char source[])
-{
-	int j = 0;
-	for (int i = 0; source[i] != '\0'; ++i)
-		switch (source[i]) {
-			case '	':
-				target[j++] = '\\';
-				target[j++] = 't';
-				break;
-			case '
-':
-				target[j++] = '\\';
-				target[j++] = 'n';
-				break;
-			default:
-				target[j++] = source[i];
-				break;
-		}
-	target[j] = '\0';
-}
-```
+
+
+## The complete source code
 
 We have used the function `getaline` from last chapter to do the above test:
 ```c
@@ -106,66 +87,64 @@ int getaline(char line[], int limit);
 
 void escape(char target[], const char source[])
 {
-	int j = 0;
-	for (int i = 0; source[i] != '\0'; ++i)
-		switch (source[i]) {
+	int to = 0;
+	for (int from = 0; source[from] != '\0'; ++from)
+		switch (source[from]) {
 			case '\t':
-				target[j++] = '\\';
-				target[j++] = 't';
+				target[to++] = '\\';
+				target[to++] = 't';
 				break;
 			case '\n':
-				target[j++] = '\\';
-				target[j++] = 'n';
+				target[to++] = '\\';
+				target[to++] = 'n';
 				break;
 			case '\\':
-				target[j++] = '\\';
-				target[j++] = '\\';
+				target[to++] = '\\';
+				target[to++] = '\\';
 				break;
 			default:
-				target[j++] = source[i];
+				target[to++] = source[from];
 				break;
 		}
-	target[j] = '\0';
+	target[to] = '\0';
 }
 
 void unescape(char target[], const char source[])
 {
-	int j = 0;
-	for (int i = 0; source[i] != '\0'; ++i) {
-		if (source[i] == '\\') {
-			switch (source[i + 1]) {
+	int to = 0;
+	for (int from = 0; source[from] != '\0'; ++from) {
+		if (source[from] == '\\') {
+			switch (source[from + 1]) {
 				case 't':
-					target[j++] = '\t';
-					++i;
+					target[to++] = '\t';
+					++from;
 					break;
 				case 'n':
-					target[j++] = '\n';
-					++i;
+					target[to++] = '\n';
+					++from;
 					break;
 				case '\\':
-					target[j++] = '\\';
-					++i;
+					target[to++] = '\\';
+					++from;
 					break;
 				default:
-					target[j++] = '\\';
+					target[to++] = '\\';
 			}
 		}
 		else {
-			target[j++] = source[i];
+			target[to++] = source[from];
 		}
 	}
-	target[j] = '\0';
+	target[to] = '\0';
 }
 
 int getaline(char line[], int limit)
 {
-	char c;
-	int i;
+	int c, i;
 
 	c = 0;
-	for (i = 0; i < limit - 1 && (c = (char) getchar()) != EOF && c != '\n';
-	     ++i) {
-		line[i] = c;
+	for (i = 0; i < limit - 1 && (c = getchar()) != EOF && c != '\n'; ++i) {
+		line[i] = (char) c;
 	}
 	if (c == '\n') {
 		line[i] = '\n';
@@ -181,9 +160,10 @@ int main(void)
 	char escline[MAXLINE];
 	while (getaline(line, MAXLINE) > 0) {
 		escape(escline, line);
-		/* printf("%s", escline); */
+		printf("%s", escline);
+		/* For testing
 		unescape(line, escline);
-		printf("%s", line);
+		printf("%s", line); */
 	}
 
 	return 0;

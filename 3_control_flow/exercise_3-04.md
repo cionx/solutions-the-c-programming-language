@@ -4,7 +4,7 @@
 > Explain why not.
 > Modify it to print that value correctly, regardless of the machine on which it runs.
 
-
+---
 
 The problem lies in the following two lines:
 ```c
@@ -12,48 +12,45 @@ if ((sign = n) < 0)
 	n = -n;
 ```
 The range of `int` goes from $-2^{\textrm{wordsize} - 1}$ to $2^{\textrm{wordsize}} - 1$.
-If `n` has the value $-2^{\textrm{wordsize} - 1}$, then by passing from $n$ to $-n$ an overflow happens, and we are back to the negative value $-2^{\textrm{wordsize} - 1}$.
+If `n` has the value $-2^{\textrm{wordsize} - 1}$, then by passing from $n$ to $-n$ an overflow happens, and we are back to the negative value $-2^{\textrm{wordsize} - 1}$.[^1]
 
-To circumvent this problem we add another loop:
-we will work with (potentially) negative results for modulo until we get to the point where we can safely pass from `n` to `-n`.
-(This will actually be the case after at most one iteration.)
+The `%`-operator has the property that `(-n) % 10` equals `-(n % 10)` for sensible values of `n`.
+For example, `-123 % 10` equals `-3`.
+We can therefore proceed with only two small changes:
 
-For example, `(-123) % 10` is `-3`, and by flipping the sign we get the digit `3`.
-We then replace `-123` with `(-123) / 10 = -12` and continue on with the original procedure.
+- Instead of making `n` positive, we always make it negative.
+- We replace `n % 10` by `-(n % 10)`.
 
+We thus arrive at the following modified code:
 ```c
-/* itoa: convert n to characters in s */
+#include <stdbool.h>
+#include <string.h>
+
+/* itoa(n, s): convert n to characters in s */
 void itoa(int n, char s[])
 {
-	int i = 0;
-	bool sign = (n < 0);
-
-	/* Calculate digits using negative modulo until there is no overflow.
-	 * This also takes care of the digit for n = 0.
-	 */
-	do {
-		int mod = n % 10;
-		if (mod < 0)
-			mod = -mod;
-		s[i++] = (char) mod + '0';
-		n /= 10;
-	} while (n < 0 && -n < 0); /* Should always fail. */
-	/* Make n non-negative. */
-	if (n < 0)
+	bool negative = (n < 0);
+	if (n > 0)
 		n = -n;
-	/* Generate the digits in reverse order. */
-	for (; n > 0; n /= 10)
-		s[i++] = n % 10 + '0';
-	if (sign)
-		s[i++] = '-';
-	s[i] = '\0';
 
+	int i = 0;
+	do {
+		s[i++] = -(n % 10) + '0';
+	} while ((n /= 10) != 0);
+
+	if (negative)
+		s[i++] = '-';
+
+	s[i] = '\0';
 	reverse(s);
 }
 ```
 
-We test our code as follows:
+We test our function as follows:
 ```c
+#include <limits.h>
+#include <stdio.h>
+
 int main(void)
 {
 	int numbers[] = {123, -123, 0, INT_MAX, INT_MIN};
@@ -76,3 +73,5 @@ The output seems to be correct:
 2147483647 becomes "2147483647"
 -2147483648 becomes "-2147483648"
 ```
+
+[^1]: This explanation is actually not quite true: overflow/underflow of signed values is undefined behaviour.

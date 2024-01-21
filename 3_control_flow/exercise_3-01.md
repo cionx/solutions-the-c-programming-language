@@ -3,7 +3,7 @@
 > Our binary search makes two tests inside the loop, when one would suffice (at the price of more tests outside).
 > Write a version with only one test inside the loop and measure the difference in run time.
 
-
+---
 
 We could rewrite `binsearch` as follows:
 ```c
@@ -15,9 +15,9 @@ int binsearch_new(int x, int v[], int vsize)
 	while (low < high) {
 		mid = (low + high) / 2; /* always lower that high */
 		if (x > v[mid])
-			low = mid + 1; /* strictly increases low */
+			low = mid + 1;      /* strictly increases low */
 		else
-			high = mid; /* strictly decreases high */
+			high = mid;         /* strictly decreases high */
 	}
 	return (v[low] == x) ? low : -1;
 }
@@ -46,7 +46,7 @@ int main(void)
 
 The original `binsearch` takes roughly 121 seconds.
 ```text
-clang exercise_3-01.c && date && ./a.out && date
+$ clang exercise_3-01.c && date && ./a.out && date
 Mon 29 May 15:48:56 CEST 2023
 Mon 29 May 15:48:57 CEST 2023
 ```
@@ -56,5 +56,5 @@ $ clang exercise_3-01.c && date && ./a.out && date
 Mon 29 May 15:51:31 CEST 2023
 Mon 29 May 15:53:47 CEST 2023
 ```
-Our new version seems to be worse than the original one.
+Our new version seems to be slightly worse than the old version.
 We guess this is due to the fact that the old version can terminate the loop once it has found the given value, whereas our version has to continue until it has shrunk the interval under consideration down to a single value.

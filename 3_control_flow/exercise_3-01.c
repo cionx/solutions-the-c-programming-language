@@ -9,9 +9,9 @@ int binsearch_new(int x, int v[], int vsize)
 	while (low < high) {
 		mid = (low + high) / 2; /* always lower that high */
 		if (x > v[mid])
-			low = mid + 1; /* strictly increases low */
+			low = mid + 1;      /* strictly increases low */
 		else
-			high = mid; /* strictly decreases high */
+			high = mid;         /* strictly decreases high */
 	}
 	return (v[low] == x) ? low : -1;
 }

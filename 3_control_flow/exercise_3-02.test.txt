@@ -1,0 +1,23 @@
+void escape(char target[], const char source[])
+{
+	int to = 0;
+	for (int from = 0; source[from] != '\0'; ++from)
+		switch (source[from]) {
+			case '\t':
+				target[to++] = '\\';
+				target[to++] = 't';
+				break;
+			case '\n':
+				target[to++] = '\\';
+				target[to++] = 'n';
+				break;
+			case '\\':
+				target[to++] = '\\';
+				target[to++] = '\\';
+				break;
+			default:
+				target[to++] = source[from];
+				break;
+		}
+	target[to] = '\0';
+}

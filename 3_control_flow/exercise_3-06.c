@@ -6,41 +6,29 @@
 void itoa(int n, char s[], int width);
 void reverse(char s[]);
 
-/* itoa: convert n to characters in s with minimal width */
+/* itoa(n, s, w): convert n to characters in s with minimal width w */
 void itoa(int n, char s[], int width)
 {
-	int i = 0;
-	bool sign = (n < 0);
-
-	/* Calculate digits using negative modulo until there is no overflow.
-	 * This also takes care of the digit for n = 0.
-	 */
-	do {
-		int mod = n % 10;
-		if (mod < 0)
-			mod = -mod;
-		s[i++] = (char) mod + '0';
-		n /= 10;
-		--width;
-	} while (n < 0 && -n < 0); /* Should always fail. */
-	/* Make n non-negative. */
-	if (n < 0)
+	bool negative = (n < 0);
+	if (n > 0)
 		n = -n;
-	/* Generate the digits in reverse order. */
-	for (; n > 0; n /= 10, --width)
-		s[i++] = n % 10 + '0';
-	if (sign) {
-		s[i++] = '-';
+
+	int i = 0;
+	do {
+		s[i++] = -(n % 10) + '0';
 		--width;
-	}
+	} while ((n /= 10) != 0);
+	if (negative)
+		s[i++] = '-';
+
 	for (; width > 0; --width)
 		s[i++] = ' ';
-	s[i] = '\0';
 
+	s[i] = '\0';
 	reverse(s);
 }
 
-/* reverse: reverse string s in place */
+/* reverse(s): reverse the string s in place */
 void reverse(char s[])
 {
 	for (int i = 0, j = (int) strlen(s) - 1; i < j; i++, j--) {
