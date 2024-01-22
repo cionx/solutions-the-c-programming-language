@@ -2,6 +2,7 @@
 
 int strrindex(char s[], char t[]);
 
+/* strrindex(s, t): find the rightmost occurrence of t in s */
 int strrindex(char s[], char t[])
 {
 	/* Find the end of s. */
@@ -11,9 +12,10 @@ int strrindex(char s[], char t[])
 
 	for (; i >= 0; --i) {
 		/* Check if s[i] start a substring equal to t. */
+		int j = i;
 		int k = 0;
-		for (int j = i; s[j] == t[k] && t[k] != '\0'; ++j, ++k)
-			;
+		while (s[j] == t[k] && t[k] != '\0')
+			++j, ++k;
 		if (t[k] == '\0')
 			return i;
 	}
